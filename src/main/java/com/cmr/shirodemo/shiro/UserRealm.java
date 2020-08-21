@@ -29,16 +29,11 @@ public class UserRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        System.out.println("执行认证流程");
-
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-
         User user = userService.findByName(token.getUsername());
-
         if (user == null) {
             return null;
         }
-
         return new SimpleAuthenticationInfo(user, user.getPassword(), "");
     }
 
@@ -49,16 +44,12 @@ public class UserRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-
         // 获取当前登录的用户
         Subject subject = SecurityUtils.getSubject();
         User user = (User) subject.getPrincipal();
         User dbUser = userService.findById(user.getId());
-
         simpleAuthorizationInfo.addStringPermission(dbUser.getPerms());
-
         return simpleAuthorizationInfo;
     }
 
